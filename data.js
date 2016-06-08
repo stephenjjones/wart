@@ -60,15 +60,19 @@ export const states = [
 
 export const activeAlerts = [
   {
-    pk: 1,
+    identifier: 'AK1256019731B4.SpecialWeatherStatement.125601A3CF00AK.AJKSPSAJK.7a1e1aeff40544aea786b32b4da447c9',
     type: 'tornado/severe thunderstorm',
-    timeBegin: 'now',
-    timeEnd: 'never'
+    headline: 'Special Weather Statement issued June 03 at 9:33AM AKDT  by NWS Juneau',
+    urgency: 'expected',
+    effective: 'now',
+    expires: '2016-06-03T09:33:00-08:00'
   },
   {
-    pk: 2,
-    type: 'tornado/severe thunderstorm',
-    timeBegin: 'tomorrow',
-    timeEnd: 'never'
+    identifier: 'AR125601977994.FlashFloodWarning.12560197AB94AR.MEGFFSMEG.3444439fa5a9ff39fd17aeb8649b42ae',
+    event: 'Flash Flood Warning',
+    headline: 'Flash Flood Warning issued June 03 at 2:17PM CDT until June 03 at 3:45PM CDT by NWS Memphis',
+    urgency: 'Immediate',
+    effective: '2016-06-03T14:17:00-05:00',
+    expires: '2016-06-03T15:45:00-05:00'
   }
 ]
