@@ -17,9 +17,6 @@ export default class AlertsList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>
-          Alert List
-        </Text>
         <ActiveAlertsListView onNavigate={this._navigate} />
       </View>
     );
@@ -38,7 +35,7 @@ export default class AlertsList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'rgb(95, 124, 138)',
     paddingLeft: 10,
     paddingRight: 10,
   },

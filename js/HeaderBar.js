@@ -58,7 +58,7 @@ export default class HeaderBar extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: 'grey',
+    backgroundColor: 'rgb(243,66,53)',
     height: 55,
     flexDirection: 'row',
     alignItems: 'center',
@@ -77,5 +77,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 20,
+    color: 'white',
   },
 });

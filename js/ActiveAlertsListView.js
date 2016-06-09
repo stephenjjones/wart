@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Text,
+  StyleSheet,
   ListView,
   TouchableHighlight,
 } from 'react-native';
@@ -39,10 +40,19 @@ export default class ActiveAlertsListView extends Component {
 
   renderRow(rowData) {
     return (
-      <TouchableHighlight onPress={ () => this.props.onNavigate('alertId') }>
+      <TouchableHighlight style={styles.row} onPress={ () => this.props.onNavigate('alertId') }>
         <Text>{rowData.headline}</Text>
       </TouchableHighlight>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  row: {
+    backgroundColor: 'white',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingVertical: 10,
+    marginTop: 10,
+  },
+});

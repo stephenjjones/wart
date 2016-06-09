@@ -19,6 +19,7 @@ export default class Settings extends Component {
     this.saveData = this.saveData.bind(this);
     this.saveAlertData = this.saveAlertData.bind(this);
     this.state = {
+      loading: true,
       countyCode: '',
       stateCode: '',
       activeAlertTypes: {},
@@ -35,6 +36,7 @@ export default class Settings extends Component {
     }).done();
     AsyncStorage.getItem("stateCode").then((value) => {
       this.setState({"stateCode": value});
+      this.state.loading = false;
     }).done();
     AsyncStorage.getItem("activeAlertTypes").then((value) => {
       if (value) {
@@ -50,7 +52,7 @@ export default class Settings extends Component {
     }
 
     return (
-      <View key={alertType.code}>
+      <View style={styles.settingRow} key={alertType.code}>
         <Text>{alertType.name}</Text>
         <Switch value={isActive} onValueChange={(value) => this.saveAlertData(alertType.code, value)} />
       </View>
@@ -58,6 +60,8 @@ export default class Settings extends Component {
   }
 
   saveData(key, value) {
+    console.log('key: ' + key + ' value: ' + value);
+
     this.setState({[key]: value});
     AsyncStorage.setItem(key, value).done();
   }
@@ -73,46 +77,52 @@ export default class Settings extends Component {
     AsyncStorage.setItem('activeAlertTypes', JSON.stringify(activeAlerts)).done();
   }
 
+  renderSettings() {
+    if (this.state.loading) {
+      return (
+        <View><Text>Loading...</Text></View>
+      );
+    }
+    return(
+      <View>
+        <View style={styles.settingRow}>
+          <Text style={styles.settingLabel}>State</Text>
+          <Picker
+            style={styles.settingPicker}
+            selectedValue={this.state.stateCode || ''}
+            onValueChange={(stateCode) => this.saveData('stateCode', stateCode)}>
+            {states.map((item, index) => <Picker.Item key={item} label={item} value={item} /> )}
+          </Picker>
+        </View>
+
+        <View style={styles.settingRow}>
+          <Text style={styles.settingLabel}>County</Text>
+          <TextInput
+            style={styles.settingTextInput}
+            onChangeText={(countyCode) => this.saveData('countyCode', countyCode)}
+            value={this.state.countyCode}
+            multiline={false}
+            placeholder="Enter county code"
+            autoCorrect={false}
+          />
+        </View>
+        <View style={styles.alertTypesList}>
+          {alertTypes.map((item, index) => this.renderAlertTypeItem(item) )}
+        </View>
+      </View>
+    );
+  }
+
   render() {
     return (
       <View>
         <HeaderBar navigator={this.props.navigator} backButton={true} />
+        <View style={styles.titleBar}>
+          <Text style={styles.pageTitle}>Settings</Text>
+        </View>
+
         <View style={styles.container}>
-          <Text style={styles.pageTitle}>
-            settings
-          </Text>
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>
-              State
-            </Text>
-            <Picker
-              style={styles.settingPicker}
-              selectedValue={this.state.stateCode}
-              onValueChange={(stateCode) => this.saveData('stateCode', stateCode)}>
-              {states.map((item, index) => <Picker.Item key={item} label={item} value={item} /> )}
-            </Picker>
-          </View>
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>
-              County
-            </Text>
-            <TextInput
-              style={styles.settingTextInput}
-              onChangeText={(countyCode) => this.saveData('countyCode', countyCode)}
-              value={this.state.countyCode}
-              multiline={false}
-              placeholder="Enter county code"
-              autoCorrect={false}
-            />
-          </View>
-          <View>
-            <Text>
-              Alert Types
-            </Text>
-            <View style={styles.alertTypesList}>
-              {alertTypes.map((item, index) => this.renderAlertTypeItem(item) )}
-            </View>
-          </View>
+          {this.renderSettings()}
         </View>
       </View>
     );
@@ -122,24 +132,34 @@ export default class Settings extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5FCFF',
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 10,
+    margin: 10,
+  },
+  titleBar: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ddd',
+    paddingVertical: 5,
   },
   pageTitle: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
   },
   settingRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  sectionHeading: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   alertTypesList: {
     flexDirection: 'column',
   },
   settingLabel: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
     width: 100,
     height: 40,
   },
@@ -147,7 +167,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: 200,
+    width: 100,
   },
   settingSwitch: {
     height: 40,
@@ -159,6 +179,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: 200,
+    width: 100,
   },
 });

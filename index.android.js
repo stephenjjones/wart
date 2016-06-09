@@ -66,7 +66,7 @@ class WeatherAlertsRealTime extends Component {
     return (
       <Navigator
         ref="navigator"
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: 'rgb(95, 124, 138)' }}
         initialRoute={{ name: 'Main' }}
         renderScene={ this.renderScene } />
     );
