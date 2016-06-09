@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Picker,
   Switch,
+  AsyncStorage,
 } from 'react-native';
 
 import HeaderBar from './HeaderBar';
@@ -14,21 +15,62 @@ import { states, alertTypes } from '../data';
 export default class Settings extends Component {
   constructor(props) {
     super(props);
+    this.loadSettings = this.loadSettings.bind(this);
+    this.saveData = this.saveData.bind(this);
+    this.saveAlertData = this.saveAlertData.bind(this);
     this.state = {
       countyCode: '',
-      stateCode: 'GA',
-      'BZW': true,
-      'CFA': false,
+      stateCode: '',
+      activeAlertTypes: {},
     };
   }
 
+  componentDidMount() {
+    this.loadSettings();
+  }
+
+  loadSettings() {
+    AsyncStorage.getItem("countyCode").then((value) => {
+      this.setState({"countyCode": value});
+    }).done();
+    AsyncStorage.getItem("stateCode").then((value) => {
+      this.setState({"stateCode": value});
+    }).done();
+    AsyncStorage.getItem("activeAlertTypes").then((value) => {
+      if (value) {
+        this.setState({"activeAlertTypes": JSON.parse(value)});
+      }
+    }).done();
+  }
+
   renderAlertTypeItem(alertType) {
+    let isActive = false;
+    if ((alertType.code in this.state.activeAlertTypes)) {
+      isActive = true;
+    }
+
     return (
       <View key={alertType.code}>
         <Text>{alertType.name}</Text>
-        <Switch onValueChange={(value) => this.setState({[alertType.code]: value})} value={this.state[alertType.code]} />
+        <Switch value={isActive} onValueChange={(value) => this.saveAlertData(alertType.code, value)} />
       </View>
     );
+  }
+
+  saveData(key, value) {
+    this.setState({[key]: value});
+    AsyncStorage.setItem(key, value).done();
+  }
+
+  saveAlertData(alertType, value) {
+    let activeAlerts = this.state['activeAlertTypes'];
+    if (value) {
+      activeAlerts[alertType] = true;
+    } else {
+      delete activeAlerts[alertType];
+    }
+    this.setState({'activeAlertTypes': activeAlerts});
+    AsyncStorage.setItem('activeAlertTypes', JSON.stringify(activeAlerts)).done();
   }
 
   render() {
@@ -46,7 +88,7 @@ export default class Settings extends Component {
             <Picker
               style={styles.settingPicker}
               selectedValue={this.state.stateCode}
-              onValueChange={(stateCode) => this.setState({stateCode: stateCode})}>
+              onValueChange={(stateCode) => this.saveData('stateCode', stateCode)}>
               {states.map((item, index) => <Picker.Item key={item} label={item} value={item} /> )}
             </Picker>
           </View>
@@ -56,8 +98,8 @@ export default class Settings extends Component {
             </Text>
             <TextInput
               style={styles.settingTextInput}
-              onChangeText={(countyCode) => this.setState({countyCode: countyCode})}
-              value={this.state.county}
+              onChangeText={(countyCode) => this.saveData('countyCode', countyCode)}
+              value={this.state.countyCode}
               multiline={false}
               placeholder="Enter county code"
               autoCorrect={false}
