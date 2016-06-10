@@ -60,9 +60,9 @@ export const states = [
 
 export const activeAlerts = [
   {
-    identifier: 'AK1256019731B4.SpecialWeatherStatement.125601A3CF00AK.AJKSPSAJK.7a1e1aeff40544aea786b32b4da447c9',
+    identifier: 'KY12560200A6F8.AirQualityAlert.1256020F3B00KY.LMKAQALMK.8446fa5ae5b9a5dca1922b99a1208616',
     type: 'tornado/severe thunderstorm',
-    headline: 'Special Weather Statement issued June 03 at 9:33AM AKDT  by NWS Juneau',
+    headline: 'air quality',
     urgency: 'expected',
     effective: 'now',
     expires: '2016-06-03T09:33:00-08:00'

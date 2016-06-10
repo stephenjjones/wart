@@ -40,7 +40,7 @@ export default class ActiveAlertsListView extends Component {
 
   renderRow(rowData) {
     return (
-      <TouchableHighlight style={styles.row} onPress={ () => this.props.onNavigate('alertId') }>
+      <TouchableHighlight style={styles.row} onPress={ () => this.props.onNavigate(rowData.identifier) }>
         <Text>{rowData.headline}</Text>
       </TouchableHighlight>
     );

@@ -9,7 +9,7 @@ import {
   Text,
   TextInput,
   View,
-  Navigator,
+k Navigator,
   TouchableHighlight,
   Picker,
   Image,
